@@ -4,11 +4,13 @@ import path from 'path';
 import Papa from 'papaparse';
 import _ from 'lodash';
 import AirQualityDashboard from '../components/AirQualityDashboard';
+import { log } from 'console';
 
 type AirQualityData = {
   daily: any[];
   monthly: any[];
   distribution: any[];
+  hourly: any[];
 };
 
 export default function Home({ data }: { data: AirQualityData }) {
@@ -29,52 +31,96 @@ export const getStaticProps: GetStaticProps = async () => {
     skipEmptyLines: true,
   }).data;
 
-  console.log('Parsed CSV Data:', parsedData); // Add this for debugging
+  console.log('parsedData');
+  
+  console.log(parsedData);
+  // Filter out rows where 'Raw Conc.' is negative
+  const filteredData = parsedData.filter(row => row['Raw Conc.'] >= 0);
 
-  const dailyAverages = _.chain(parsedData)
-    .groupBy(row => `${row.Year}-${String(row.Month).padStart(2, '0')}-${String(row.Day).padStart(2, '0')}`)
+  if (filteredData.length === 0) {
+    return {
+      props: {
+        data: {
+          daily: [],
+          monthly: [],
+          distribution: [],
+          hourly: [],
+        },
+      },
+    };
+  }
+
+  // Parse "Date (LT)" in "DD/MM/YYYY HH:MM" format
+  const parseDate = (dateStr: string) => new Date(dateStr);
+
+  // Helper functions
+  const getDailyKey = (dateStr: string) => {
+    const date = parseDate(dateStr);
+    // console.log(date, dateStr);
+    
+    return date.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  };
+
+  const getMonthlyKey = (dateStr: string) => {
+    const date = parseDate(dateStr);
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+  };
+
+  const getHourKey = (dateStr: string) => {
+    const date = parseDate(dateStr);
+    return date.getHours();
+  };
+
+  // Daily averages
+  const dailyAverages = _.chain(filteredData)
+    .groupBy(row => getDailyKey(row['Date (LT)']))
     .mapValues(group => ({
-      date: `${group[0].Year}-${String(group[0].Month).padStart(2, '0')}-${String(group[0].Day).padStart(2, '0')}`,
+      date: getDailyKey(group[0]['Date (LT)']),
       pm25: _.meanBy(group, 'Raw Conc.'),
-      aqi: _.meanBy(group, 'AQI'),
+      aqi: _.meanBy(group.filter(row => row['AQI'] >= 0), 'AQI'),
     }))
     .values()
     .sortBy('date')
     .value();
 
-  const monthlyAverages = _.chain(parsedData)
-    .groupBy(row => `${row.Year}-${String(row.Month).padStart(2, '0')}`)
+  // Monthly averages
+  const monthlyAverages = _.chain(filteredData)
+    .groupBy(row => getMonthlyKey(row['Date (LT)']))
     .mapValues(group => ({
-      month: `${group[0].Year}-${String(group[0].Month).padStart(2, '0')}`,
+      month: getMonthlyKey(group[0]['Date (LT)']),
       avgPM25: _.meanBy(group, 'Raw Conc.'),
-      avgAQI: _.meanBy(group, 'AQI'),
-      maxPM25: _.maxBy(group, 'Raw Conc.')['Raw Conc.'],
-      minPM25: _.minBy(group, 'Raw Conc.')['Raw Conc.'],
+      avgAQI: _.meanBy(group.filter(row => row['AQI'] >= 0), 'AQI'),
+      maxPM25: _.maxBy(group, 'Raw Conc.')?.['Raw Conc.'] ?? 0,
+      minPM25: _.minBy(group, 'Raw Conc.')?.['Raw Conc.'] ?? 0,
     }))
     .values()
     .sortBy('month')
     .value();
 
-  const distribution = _.chain(parsedData)
-    .countBy('AQI Category')
-    .map((count, category) => ({
-      category,
-      count,
+  // Hourly averages (new)
+  const hourlyAverages = _.chain(filteredData)
+    .groupBy(row => getHourKey(row['Date (LT)']))
+    .map((group, hour) => ({
+      hour: parseInt(hour),
+      avgPM25: _.meanBy(group, 'Raw Conc.'),
+      avgAQI: _.meanBy(group.filter(row => row['AQI'] >= 0), 'AQI'),
     }))
-    .filter(item => item.category !== 'N/A')
+    .sortBy('hour')
     .value();
 
-  console.log('Daily Averages:', dailyAverages); // Add this for debugging
-  console.log('Monthly Averages:', monthlyAverages);
-  console.log('Distribution:', distribution);
+  // AQI category distribution
+  const distribution = _.chain(filteredData)
+    .countBy('AQI Category')
+    .map((count, category) => ({ category, count }))
+    .filter(item => item.category !== 'N/A')
+    .value();
 
   const data = {
     daily: dailyAverages,
     monthly: monthlyAverages,
     distribution,
+    hourly: hourlyAverages,
   };
-
-  
 
   return {
     props: { data },
