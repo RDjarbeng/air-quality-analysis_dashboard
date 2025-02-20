@@ -6,15 +6,16 @@ type AirQualityData = {
   daily: any[];
   monthly: any[];
   distribution: any[];
+  hourly: any[];
 };
 
 const AirQualityDashboard = ({ data }: { data: AirQualityData }) => {
+  console.log('Received Data:', data);
 
-  console.log('Received Data:', data); // Add this for debugging
-
-  if (!data.daily.length || !data.monthly.length || !data.distribution.length) {
-    return <div>No data available to display charts.</div>; // Fallback if data is empty
+  if (!data.daily.length || !data.monthly.length || !data.distribution.length || !data.hourly.length) {
+    return <div>No data available to display charts.</div>;
   }
+
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       return (
@@ -44,6 +45,7 @@ const AirQualityDashboard = ({ data }: { data: AirQualityData }) => {
 
   return (
     <div className="space-y-4">
+      {/* Daily Trends Chart */}
       <Card>
         <CardHeader>
           <CardTitle>Daily PM2.5 and AQI Trends</CardTitle>
@@ -66,6 +68,7 @@ const AirQualityDashboard = ({ data }: { data: AirQualityData }) => {
         </CardContent>
       </Card>
 
+      {/* Monthly Levels Chart */}
       <Card>
         <CardHeader>
           <CardTitle>Monthly PM2.5 Levels</CardTitle>
@@ -88,6 +91,33 @@ const AirQualityDashboard = ({ data }: { data: AirQualityData }) => {
         </CardContent>
       </Card>
 
+      {/* Hourly Averages Chart (new) */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Hourly Average PM2.5 and AQI</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="h-96">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={data.hourly} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis
+                  dataKey="hour"
+                  tickFormatter={(hour) => `${hour.toString().padStart(2, '0')}:00`}
+                />
+                <YAxis yAxisId="left" label={{ value: 'PM2.5 (µg/m³)', angle: -90, position: 'insideLeft' }} />
+                <YAxis yAxisId="right" orientation="right" label={{ value: 'AQI', angle: 90, position: 'insideRight' }} />
+                <Tooltip content={CustomTooltip} />
+                <Legend />
+                <Line yAxisId="left" type="monotone" dataKey="avgPM25" stroke="#8884d8" name="PM2.5" dot={false} />
+                <Line yAxisId="right" type="monotone" dataKey="avgAQI" stroke="#82ca9d" name="AQI" dot={false} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* AQI Category Distribution Chart */}
       <Card>
         <CardHeader>
           <CardTitle>AQI Category Distribution</CardTitle>
