@@ -5,6 +5,7 @@ import Papa from 'papaparse';
 import _ from 'lodash';
 import { useState } from 'react';
 import AirQualityDashboard from '../components/AirQualityDashboard';
+import { Footer } from '../components/Footer';
 
 type AirQualityData = {
   daily: any[];
@@ -24,63 +25,66 @@ export default function Home({ yearData, combinedData }: { yearData: YearData; c
   const years = Object.keys(yearData).sort();
 
   return (
-    <div className="container mx-auto p-4">
-      <div className="mb-6 space-y-4">
-        <div className="flex items-center space-x-4">
-          <div>
-            <label htmlFor="data-source" className="block text-sm font-medium text-gray-700 mb-2">
-              Data Source
-            </label>
-            <select
-              id="data-source"
-              value={showCombined ? 'combined' : 'yearly'}
-              onChange={(e) => setShowCombined(e.target.value === 'combined')}
-              className="block w-full max-w-xs rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-            >
-              <option value="yearly">Yearly Data</option>
-              <option value="combined">Combined Data (2022-2025)</option>
-            </select>
-          </div>
-          
-          {!showCombined && (
+    <div className="min-h-screen flex flex-col">
+      <div className="container mx-auto p-4 flex-grow">
+        <div className="mb-6 space-y-4">
+          <div className="flex items-center space-x-4">
             <div>
-              <label htmlFor="year-select" className="block text-sm font-medium text-gray-700 mb-2">
-                Select Year
+              <label htmlFor="data-source" className="block text-sm font-medium text-gray-700 mb-2">
+                Data Source
               </label>
               <select
-                id="year-select"
-                value={selectedYear}
-                onChange={(e) => setSelectedYear(e.target.value)}
+                id="data-source"
+                value={showCombined ? 'combined' : 'yearly'}
+                onChange={(e) => setShowCombined(e.target.value === 'combined')}
                 className="block w-full max-w-xs rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
               >
-                {years.map((year) => (
-                  <option key={year} value={year}>
-                    {year}
-                  </option>
-                ))}
+                <option value="yearly">Yearly Data</option>
+                <option value="combined">Combined Data (2022-2025)</option>
               </select>
             </div>
-          )}
+            
+            {!showCombined && (
+              <div>
+                <label htmlFor="year-select" className="block text-sm font-medium text-gray-700 mb-2">
+                  Select Year
+                </label>
+                <select
+                  id="year-select"
+                  value={selectedYear}
+                  onChange={(e) => setSelectedYear(e.target.value)}
+                  className="block w-full max-w-xs rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                >
+                  {years.map((year) => (
+                    <option key={year} value={year}>
+                      {year}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+          </div>
+
+          <div className="flex items-center space-x-2">
+            <input
+              type="checkbox"
+              id="show-aqi"
+              checked={showAQI}
+              onChange={(e) => setShowAQI(e.target.checked)}
+              className="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+            />
+            <label htmlFor="show-aqi" className="text-sm font-medium text-gray-700">
+              Show AQI Values
+            </label>
+          </div>
         </div>
 
-        <div className="flex items-center space-x-2">
-          <input
-            type="checkbox"
-            id="show-aqi"
-            checked={showAQI}
-            onChange={(e) => setShowAQI(e.target.checked)}
-            className="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-          />
-          <label htmlFor="show-aqi" className="text-sm font-medium text-gray-700">
-            Show AQI Values
-          </label>
-        </div>
+        <AirQualityDashboard 
+          data={showCombined ? combinedData : yearData[selectedYear]} 
+          showAQI={showAQI}
+        />
       </div>
-
-      <AirQualityDashboard 
-        data={showCombined ? combinedData : yearData[selectedYear]} 
-        showAQI={showAQI}
-      />
+      <Footer />
     </div>
   );
 }
