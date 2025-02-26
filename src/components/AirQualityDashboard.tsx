@@ -7,14 +7,16 @@ type AirQualityData = {
   monthly: any[];
   distribution: any[];
   hourly: any[];
+  raw?: any[];
 };
 
 type AirQualityDashboardProps = {
   data: AirQualityData;
   showAQI: boolean;
+  showRawData: boolean;
 };
 
-const AirQualityDashboard = ({ data, showAQI }: AirQualityDashboardProps) => {
+const AirQualityDashboard = ({ data, showAQI, showRawData }: AirQualityDashboardProps) => {
   if (!data.daily.length || !data.monthly.length || !data.distribution.length || !data.hourly.length) {
     return <div>No data available to display charts.</div>;
   }
@@ -24,6 +26,22 @@ const AirQualityDashboard = ({ data, showAQI }: AirQualityDashboardProps) => {
       return (
         <div className="bg-white p-4 border rounded shadow">
           <p className="font-medium">{label}</p>
+          <p className="text-sm">PM2.5: {payload[0].value.toFixed(2)} µg/m³</p>
+          {showAQI && payload[1] && (
+            <p className="text-sm">AQI: {payload[1].value.toFixed(0)}</p>
+          )}
+        </div>
+      );
+    }
+    return null;
+  };
+
+  const RawDataTooltip = ({ active, payload }: any) => {
+    if (active && payload && payload.length) {
+      const date = new Date(payload[0].payload.date);
+      return (
+        <div className="bg-white p-4 border rounded shadow">
+          <p className="font-medium">{date.toLocaleString()}</p>
           <p className="text-sm">PM2.5: {payload[0].value.toFixed(2)} µg/m³</p>
           {showAQI && payload[1] && (
             <p className="text-sm">AQI: {payload[1].value.toFixed(0)}</p>
@@ -50,6 +68,41 @@ const AirQualityDashboard = ({ data, showAQI }: AirQualityDashboardProps) => {
 
   return (
     <div className="space-y-4">
+      {/* Raw Data Chart */}
+      {showRawData && data.raw && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Raw PM2.5 {showAQI && 'and AQI'} Data</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="h-96">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={data.raw} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis
+                    dataKey="date"
+                    type="number"
+                    domain={['dataMin', 'dataMax']}
+                    tickFormatter={(timestamp) => new Date(timestamp).toLocaleDateString()}
+                    scale="time"
+                  />
+                  <YAxis yAxisId="left" label={{ value: 'PM2.5 (µg/m³)', angle: -90, position: 'insideLeft' }} />
+                  {showAQI && (
+                    <YAxis yAxisId="right" orientation="right" label={{ value: 'AQI', angle: 90, position: 'insideRight' }} />
+                  )}
+                  <Tooltip content={RawDataTooltip} />
+                  <Legend />
+                  <Line yAxisId="left" type="monotone" dataKey="pm25" stroke="#8884d8" name="PM2.5" dot={false} />
+                  {showAQI && (
+                    <Line yAxisId="right" type="monotone" dataKey="aqi" stroke="#82ca9d" name="AQI" dot={false} />
+                  )}
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Daily Trends Chart */}
       <Card>
         <CardHeader>

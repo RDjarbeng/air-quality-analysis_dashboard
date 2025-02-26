@@ -12,6 +12,7 @@ type AirQualityData = {
   monthly: any[];
   distribution: any[];
   hourly: any[];
+  raw?: any[]; // Add raw data type
 };
 
 type YearData = {
@@ -22,13 +23,14 @@ export default function Home({ yearData, combinedData }: { yearData: YearData; c
   const [selectedYear, setSelectedYear] = useState('2024');
   const [showAQI, setShowAQI] = useState(true);
   const [showCombined, setShowCombined] = useState(false);
+  const [showRawData, setShowRawData] = useState(false);
   const years = Object.keys(yearData).sort();
 
   return (
     <div className="min-h-screen flex flex-col">
       <div className="container mx-auto p-4 flex-grow">
         <div className="mb-6 space-y-4">
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-4 flex-wrap gap-y-4">
             <div>
               <label htmlFor="data-source" className="block text-sm font-medium text-gray-700 mb-2">
                 Data Source
@@ -65,23 +67,39 @@ export default function Home({ yearData, combinedData }: { yearData: YearData; c
             )}
           </div>
 
-          <div className="flex items-center space-x-2">
-            <input
-              type="checkbox"
-              id="show-aqi"
-              checked={showAQI}
-              onChange={(e) => setShowAQI(e.target.checked)}
-              className="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-            />
-            <label htmlFor="show-aqi" className="text-sm font-medium text-gray-700">
-              Show AQI Values
-            </label>
+          <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                id="show-aqi"
+                checked={showAQI}
+                onChange={(e) => setShowAQI(e.target.checked)}
+                className="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              />
+              <label htmlFor="show-aqi" className="text-sm font-medium text-gray-700">
+                Show AQI Values
+              </label>
+            </div>
+
+            <div className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                id="show-raw"
+                checked={showRawData}
+                onChange={(e) => setShowRawData(e.target.checked)}
+                className="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              />
+              <label htmlFor="show-raw" className="text-sm font-medium text-gray-700">
+                Show Hourly Data
+              </label>
+            </div>
           </div>
         </div>
 
         <AirQualityDashboard 
           data={showCombined ? combinedData : yearData[selectedYear]} 
           showAQI={showAQI}
+          showRawData={showRawData}
         />
       </div>
       <Footer />
@@ -112,6 +130,7 @@ export const getStaticProps: GetStaticProps = async () => {
     monthly: [],
     distribution: [],
     hourly: [],
+    raw: [],
   };
 
   try {
@@ -143,8 +162,16 @@ async function processData(csvText: string): Promise<AirQualityData> {
       monthly: [],
       distribution: [],
       hourly: [],
+      raw: [],
     };
   }
+
+  // Process raw data
+  const rawData = filteredData.map(row => ({
+    date: new Date(row['Date (LT)']).getTime(),
+    pm25: row['Raw Conc.'],
+    aqi: row['AQI'],
+  })).sort((a, b) => a.date - b.date);
 
   // Parse "Date (LT)" in "DD/MM/YYYY HH:MM" format
   const parseDate = (dateStr: string) => new Date(dateStr);
@@ -214,5 +241,6 @@ async function processData(csvText: string): Promise<AirQualityData> {
     monthly: monthlyAverages,
     distribution,
     hourly: hourlyAverages,
+    raw: rawData,
   };
 }
