@@ -63,6 +63,10 @@ Children and pregnant women
 
 10.3% of readings in "Unhealthy" category indicate periods where general population may experience health effects
 
+This chart gives an explanation of what the Air Quality Index (AQI) readings mean. If not familiar with the AQI find more information [here: Understanding the Air Quality Index](https://rdjarbeng.github.io/understanding-the-air-quality-index-aqi/)
+![AQI chart](https://github.com/user-attachments/assets/71ff920f-068d-4706-aa0f-978d143e49fe)
+
+
 
 
 
