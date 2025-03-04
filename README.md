@@ -2,6 +2,8 @@
 Trying to analyze some air quality data from Africa; mostly in Rwanda -Kigali to see if there are any insights.
 Data obtained from Airnow.gov which provides PM2.5 data from reference monitors at the US embassy for the different cities.
 
+## Input files: CSV files downloaded from airnow.gov located in /public
+
 
 ![image](https://github.com/user-attachments/assets/4bce4115-09ad-4c7f-a835-cef547f50d36)
 
