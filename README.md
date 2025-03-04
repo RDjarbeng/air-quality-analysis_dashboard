@@ -73,3 +73,7 @@ This chart gives an explanation of what the Air Quality Index (AQI) readings mea
 
 
 
+> Data sourced from Airnow.gov, provided by the U.S. Environmental Protection Agency and the U.S. State Department’s air quality monitoring program. Data provided on as-is basis and does not verify the accuracy.
+
+
+
