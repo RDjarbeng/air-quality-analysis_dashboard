@@ -7,19 +7,19 @@ const Navbar = () => {
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center space-x-8">
-            <Link href="/" className="text-xl font-bold text-gray-800">
+            <Link href="/" className="text-xl font-bold text-gray-800" prefetch={true}>
               Air Quality Dashboard
             </Link>
             <div className="hidden md:flex space-x-6">
-              <Link href="/#dashboard" className="text-gray-600 hover:text-gray-900">
+              <Link href="/#dashboard" className="text-gray-600 hover:text-gray-900" prefetch={true}>
                 Dashboard
               </Link>
-              <Link href="/#statistics" className="text-gray-600 hover:text-gray-900">
+              <Link href="/#statistics" className="text-gray-600 hover:text-gray-900" prefetch={true}>
                 Statistics
               </Link>
             </div>
           </div>
-          <Link href="/about" className="text-gray-600 hover:text-gray-900">
+          <Link href="/about" className="text-gray-600 hover:text-gray-900" prefetch={true}>
             About
           </Link>
         </div>
