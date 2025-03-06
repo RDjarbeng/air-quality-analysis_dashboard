@@ -41,6 +41,11 @@ const About: React.FC = () => {
               The measurements undergo quality control processes before being made available through 
               Airnow.gov's system.
             </p>
+
+            <p>
+              I took the images in the visual comparison section on different days, February 26th and March 4th. In one the stadium can be easily seen whilst in the other it's covered by fog/smog or whatever was affecting visibility.
+              Location: CMU-Africa campus.
+            </p>
           </section>
 
           <section>
