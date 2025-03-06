@@ -5,10 +5,17 @@ import Papa from 'papaparse';
 import _ from 'lodash';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import AirQualityDashboard from '../components/AirQualityDashboard';
-import Statistics from '../components/Statistics';
+// import AirQualityDashboard from '../components/AirQualityDashboard';
+// import Statistics from '../components/Statistics';
 import Navbar from '../components/Navbar';
 import { Footer } from '../components/Footer';
+import dynamic from 'next/dynamic';
+
+const AirQualityDashboard = dynamic(() => import('../components/AirQualityDashboard'), { ssr: false });
+const Statistics = dynamic(() => import('../components/Statistics'), { ssr: false });
+
+
+
 
 type AirQualityData = {
   daily: any[];
@@ -31,14 +38,19 @@ export default function Home({ yearData, combinedData }: { yearData: YearData; c
   const router = useRouter();
 
   useEffect(() => {
-    // Handle hash-based navigation
-    if (router.asPath.includes('#')) {
-      const id = router.asPath.split('#')[1];
-      const element = document.getElementById(id);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
+    const handleHashNavigation = () => {
+      if (router.asPath.includes('#')) {
+        const id = router.asPath.split('#')[1];
+        const element = document.getElementById(id);
+        if (element) {
+          setTimeout(() => {
+            element.scrollIntoView({ behavior: 'smooth' });
+          }, 100); // Small delay to ensure page is rendered
+        }
       }
-    }
+    };
+  
+    handleHashNavigation();
   }, [router.asPath]);
 
   const currentData = showCombined ? combinedData : yearData[selectedYear];
