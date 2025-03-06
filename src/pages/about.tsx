@@ -18,11 +18,7 @@ const About: React.FC = () => {
               from reference monitors at the US embassy. The data is sourced from Airnow.gov, providing 
               valuable insights into the city's air quality patterns and trends.
             </p>
-            <img 
-              src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Kigali2018Cropped.jpg" 
-              alt="Kigali City"
-              className="w-full rounded-lg shadow-lg mb-4"
-            />
+            
           </section>
 
           <section className="mb-12">
@@ -50,10 +46,10 @@ const About: React.FC = () => {
           <section>
             <h2 className="text-2xl font-semibold mb-4">Visual Comparison</h2>
             <ImageComparison
-              beforeImage="https://upload.wikimedia.org/wikipedia/commons/3/3c/Kigali2018Cropped.jpg"
-              afterImage="https://upload.wikimedia.org/wikipedia/commons/3/3c/Kigali2018Cropped.jpg"
-              beforeLabel="Clear Day"
-              afterLabel="Polluted Day"
+              beforeImage="/PXL_20250226_075015181.jpg" // Updated to local image
+              afterImage="/PXL_20250304_070425631.jpg" // Updated to local image
+              beforeLabel="Slightly Clear Day"
+              afterLabel="Low visibility Day"
             />
           </section>
         </div>

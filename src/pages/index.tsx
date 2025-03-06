@@ -3,8 +3,11 @@ import fs from 'fs';
 import path from 'path';
 import Papa from 'papaparse';
 import _ from 'lodash';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import AirQualityDashboard from '../components/AirQualityDashboard';
+import Statistics from '../components/Statistics';
+import Navbar from '../components/Navbar';
 import { Footer } from '../components/Footer';
 
 type AirQualityData = {
@@ -12,7 +15,7 @@ type AirQualityData = {
   monthly: any[];
   distribution: any[];
   hourly: any[];
-  raw?: any[]; // Add raw data type
+  raw?: any[];
 };
 
 type YearData = {
@@ -25,82 +28,103 @@ export default function Home({ yearData, combinedData }: { yearData: YearData; c
   const [showCombined, setShowCombined] = useState(false);
   const [showRawData, setShowRawData] = useState(false);
   const years = Object.keys(yearData).sort();
+  const router = useRouter();
+
+  useEffect(() => {
+    // Handle hash-based navigation
+    if (router.asPath.includes('#')) {
+      const id = router.asPath.split('#')[1];
+      const element = document.getElementById(id);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  }, [router.asPath]);
+
+  const currentData = showCombined ? combinedData : yearData[selectedYear];
 
   return (
     <div className="min-h-screen flex flex-col">
+      <Navbar />
       <div className="container mx-auto p-4 flex-grow">
-        <div className="mb-6 space-y-4">
-          <div className="flex items-center space-x-4 flex-wrap gap-y-4">
-            <div>
-              <label htmlFor="data-source" className="block text-sm font-medium text-gray-700 mb-2">
-                Data Source
-              </label>
-              <select
-                id="data-source"
-                value={showCombined ? 'combined' : 'yearly'}
-                onChange={(e) => setShowCombined(e.target.value === 'combined')}
-                className="block w-full max-w-xs rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-              >
-                <option value="yearly">Yearly Data</option>
-                <option value="combined">Combined Data (2022-2025)</option>
-              </select>
-            </div>
-            
-            {!showCombined && (
+        <div id="dashboard">
+          <div className="mb-6 space-y-4">
+            <div className="flex items-center space-x-4 flex-wrap gap-y-4">
               <div>
-                <label htmlFor="year-select" className="block text-sm font-medium text-gray-700 mb-2">
-                  Select Year
+                <label htmlFor="data-source" className="block text-sm font-medium text-gray-700 mb-2">
+                  Data Source
                 </label>
                 <select
-                  id="year-select"
-                  value={selectedYear}
-                  onChange={(e) => setSelectedYear(e.target.value)}
+                  id="data-source"
+                  value={showCombined ? 'combined' : 'yearly'}
+                  onChange={(e) => setShowCombined(e.target.value === 'combined')}
                   className="block w-full max-w-xs rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                 >
-                  {years.map((year) => (
-                    <option key={year} value={year}>
-                      {year}
-                    </option>
-                  ))}
+                  <option value="yearly">Yearly Data</option>
+                  <option value="combined">Combined Data (2022-2025)</option>
                 </select>
               </div>
-            )}
-          </div>
-
-          <div className="flex items-center space-x-4">
-            <div className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                id="show-aqi"
-                checked={showAQI}
-                onChange={(e) => setShowAQI(e.target.checked)}
-                className="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-              />
-              <label htmlFor="show-aqi" className="text-sm font-medium text-gray-700">
-                Show AQI Values
-              </label>
+              
+              {!showCombined && (
+                <div>
+                  <label htmlFor="year-select" className="block text-sm font-medium text-gray-700 mb-2">
+                    Select Year
+                  </label>
+                  <select
+                    id="year-select"
+                    value={selectedYear}
+                    onChange={(e) => setSelectedYear(e.target.value)}
+                    className="block w-full max-w-xs rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                  >
+                    {years.map((year) => (
+                      <option key={year} value={year}>
+                        {year}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
             </div>
 
-            <div className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                id="show-raw"
-                checked={showRawData}
-                onChange={(e) => setShowRawData(e.target.checked)}
-                className="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-              />
-              <label htmlFor="show-raw" className="text-sm font-medium text-gray-700">
-                Show Hourly Data
-              </label>
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  id="show-aqi"
+                  checked={showAQI}
+                  onChange={(e) => setShowAQI(e.target.checked)}
+                  className="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                />
+                <label htmlFor="show-aqi" className="text-sm font-medium text-gray-700">
+                  Show AQI Values
+                </label>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  id="show-raw"
+                  checked={showRawData}
+                  onChange={(e) => setShowRawData(e.target.checked)}
+                  className="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                />
+                <label htmlFor="show-raw" className="text-sm font-medium text-gray-700">
+                  Show Hourly Data
+                </label>
+              </div>
             </div>
           </div>
+
+          <AirQualityDashboard 
+            data={currentData} 
+            showAQI={showAQI}
+            showRawData={showRawData}
+          />
         </div>
-
-        <AirQualityDashboard 
-          data={showCombined ? combinedData : yearData[selectedYear]} 
-          showAQI={showAQI}
-          showRawData={showRawData}
-        />
+        
+        <div id="statistics" className="mt-8 pt-8">
+          <Statistics data={currentData} />
+        </div>
       </div>
       <Footer />
     </div>
