@@ -1,5 +1,5 @@
 # Summary
-Trying to analyze some air quality data from Africa; mostly in Rwanda -Kigali to see if there are any insights.
+Trying to analyze some air quality data from Africa; mostly in Rwanda -Kigali to see if there are any insights. For context in Kigali there's been low visibility and haze/smog at the beginning of January 2025 and I'm curious to see if particulate matter (PM) plays a part in this.
 Data obtained from Airnow.gov which provides PM2.5 data from reference monitors at the US embassy for the different cities.
 
 ## Input files: CSV files downloaded from airnow.gov located in /public
