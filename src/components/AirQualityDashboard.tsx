@@ -21,11 +21,29 @@ const AirQualityDashboard = ({ data, showAQI, showRawData }: AirQualityDashboard
     return <div>No data available to display charts.</div>;
   }
 
+  // Preprocess daily data to convert date strings to timestamps with debugging and sorting
+  const processedDailyData = data.daily
+    .map(item => {
+      const dateStr = item.date;
+      const [day, month, year] = dateStr.split('/'); // Split as DD/MM/YYYY
+      const timestamp = new Date(`${year}-${month}-${day}`).getTime(); // Construct as YYYY-MM-DD
+      if (isNaN(timestamp)) {
+        console.error(`Invalid Date for entry:`, item);
+      }
+      return {
+        ...item,
+        date: timestamp
+      };
+    })
+    .filter(item => !isNaN(item.date)) // Filter out invalid dates
+    .sort((a, b) => a.date - b.date); // Sort by date timestamp in ascending order
+
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
+      const dateLabel = new Date(label).toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' });
       return (
         <div className="bg-white p-4 border rounded shadow">
-          <p className="font-medium">{label}</p>
+          <p className="font-medium">{dateLabel}</p>
           <p className="text-sm">PM2.5: {payload[0].value.toFixed(2)} µg/m³</p>
           {showAQI && payload[1] && (
             <p className="text-sm">AQI: {payload[1].value.toFixed(0)}</p>
@@ -111,9 +129,16 @@ const AirQualityDashboard = ({ data, showAQI, showRawData }: AirQualityDashboard
         <CardContent>
           <div className="h-96">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={data.daily} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+              <LineChart data={processedDailyData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="date" />
+                <XAxis
+                  dataKey="date"
+                  type="number"
+                  domain={['dataMin', 'dataMax']}
+                  tickFormatter={(timestamp) => new Date(timestamp).toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' })}
+                  scale="time"
+                  interval="preserveStartEnd"
+                />
                 <YAxis yAxisId="left" label={{ value: 'PM2.5 (µg/m³)', angle: -90, position: 'insideLeft' }} />
                 {showAQI && (
                   <YAxis yAxisId="right" orientation="right" label={{ value: 'AQI', angle: 90, position: 'insideRight' }} />
@@ -195,7 +220,7 @@ const AirQualityDashboard = ({ data, showAQI, showRawData }: AirQualityDashboard
                 <BarChart data={data.distribution} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="category" />
-                  <YAxis />
+                  <YAxis label={{ value: "AQI", angle: -90, position: 'insideLeft' }} />
                   <Tooltip />
                   <Bar dataKey="count" fill="#8884d8" />
                 </BarChart>
