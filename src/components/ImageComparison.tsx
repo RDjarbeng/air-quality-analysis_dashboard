@@ -16,12 +16,24 @@ const ImageComparison = ({ beforeImage, afterImage, beforeLabel = 'Before', afte
         <CardTitle>Image Comparison</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="relative h-[400px] w-full">
+        <div className="relative  w-full">
           <ReactCompareSlider
-            itemOne={<ReactCompareSliderImage src={beforeImage} alt={beforeLabel} />}
-            itemTwo={<ReactCompareSliderImage src={afterImage} alt={afterLabel} />}
+            itemOne={
+              <ReactCompareSliderImage
+                src={beforeImage}
+                alt={beforeLabel}
+                style={{ objectFit: 'contain', maxWidth: '100%', height: 'auto' }}
+              />
+            }
+            itemTwo={
+              <ReactCompareSliderImage
+                src={afterImage}
+                alt={afterLabel}
+                style={{ objectFit: 'contain', maxWidth: '100%', height: 'auto' }}
+              />
+            }
             position={50}
-            style={{ height: '100%' }}
+            style={{ width: '100%', height: 'auto' }} // Let height adapt to content
           />
           <div className="absolute bottom-4 left-4 bg-black/50 text-white px-2 py-1 rounded">
             {beforeLabel}
