@@ -8,18 +8,23 @@ const About: React.FC = () => {
     <div className="min-h-screen flex flex-col">
       <Navbar />
       <main className="container mx-auto px-4 py-8 flex-grow">
-        <h1 className="text-4xl font-bold mb-8">About the Project</h1>
+        <h1 className="text-4xl font-bold mb-8 text-center">About the Project</h1>
         
-        <div className="prose max-w-none">
+        <div className="prose max-w-3xl mx-auto text-gray-700">
           <section className="mb-12">
             <h2 className="text-2xl font-semibold mb-4">Project Overview</h2>
-            <p className="text-gray-700 mb-4">
+            <p className="mb-4">
               This dashboard analyzes air quality data from Kigali, Rwanda, focusing on PM2.5 measurements 
-              from reference monitors at the US embassy. The data is sourced from Airnow.gov, providing 
-              valuable insights into the city's air quality patterns and trends.
+              from reference monitors at the US embassy.
+              For context, Kigali experienced low visibility and haze/smog in early January 2025, prompting interest in exploring the potential influence of particulate matter (PM) on these conditions.
+              The data is sourced from Airnow.gov, providing valuable insights into the city's air quality patterns and trends.
+            </p>
+            <p className="mb-4">
+              This analysis aims to identify notable trends in air quality data from Kigali, Rwanda, with a particular focus on the period between November 2024 and January 2025. 
+              During this timeframe, a slight increase in PM2.5 levels is observed; however, further investigation is needed to determine its statistical significance and potential causes. 
+              Notably, the data indicates that Kigali’s Air Quality Index (AQI) ranges from moderate to unhealthy for most of the year, with only a few days classified as 'good,' offering a detailed perspective on the city’s air quality dynamics.
             </p>
           </section>
-
 
           <section className="mb-12">
             <h2 className="text-2xl font-semibold mb-4">Methodology</h2>
@@ -29,29 +34,36 @@ const About: React.FC = () => {
               Airnow.gov's system.
             </p>
           </section>
+        </div>
 
-          <section>
+        {/* Moved Visual Comparison section outside the constrained div */}
+        <section className="mb-12">
+          <div className="prose max-w-3xl mx-auto text-gray-700">
             <h2 className="text-2xl font-semibold mb-4">Visual Comparison</h2>
-            <ImageComparison
-              beforeImage="images/amahoro_fence2_20250307_095757277.MP.jpg"
-              afterImage="images/amahoro_low_visibility_20250226_075015181.jpg"
-              beforeLabel="Slightly Clear Day"
-              afterLabel="Low visibility Day"
-            />
-            
+          </div>
+          <ImageComparison
+            beforeImage="images/amahoro_fence2_20250307_095757277.MP.jpg"
+            afterImage="images/amahoro_low_visibility_20250226_075015181.jpg"
+            beforeLabel="Slightly Clear Day"
+            afterLabel="Low visibility Day"
+            className="w-full"
+          />
+          <div className="prose max-w-3xl mx-auto text-gray-700">
             <p className="text-gray-700 mb-4">
               The images in the visual comparison section were captured on two different days: February 26th and March 7th. 
               In one image, the Amahoro Stadium and background hills are clearly visible, while in the other, visibility is slightly reduced. 
               The Amahoro Stadium, annotated below, served as a landmark and reference point to align the images as closely as possible. 
               Both photos were taken from the CMU-Africa campus.
             </p>
-            
-            <img 
-              src="images/amahoro_annotated.jpg"
-              alt="Kigali City on a Clear Day"
-              className="w-full rounded-lg shadow-lg mb-4"
-            />
-          </section>
+          </div>
+          <img 
+            src="images/amahoro_annotated.jpg"
+            alt="Kigali City on a Clear Day"
+            className="w-full rounded-lg shadow-lg mb-4"
+          />
+        </section>
+
+        <div className="prose max-w-3xl mx-auto text-gray-700">
           <section className="mb-12">
             <h2 className="text-2xl font-semibold mb-4">Data Analysis - 2024 Kigali Perspective</h2>
             
@@ -121,19 +133,22 @@ const About: React.FC = () => {
                 This chart gives an explanation of what the Air Quality Index (AQI) readings mean. If not familiar with the AQI find more information 
                 <a href="https://rdjarbeng.github.io/understanding-the-air-quality-index-aqi/" className="text-blue-600 hover:underline"> here: Understanding the Air Quality Index</a>
               </p>
-              
-              <img 
-                src="https://github.com/user-attachments/assets/71ff920f-068d-4706-aa0f-978d143e49fe" 
-                alt="AQI Chart"
-                className="w-full max-w-2xl rounded-lg shadow-lg mb-4"
-              />
             </div>
-
-            <blockquote className="border-l-4 border-gray-300 pl-4 italic text-gray-600">
-              Data sourced from Airnow.gov, provided by the U.S. Environmental Protection Agency and the U.S. State Department’s air quality monitoring program. 
-              Data provided on as-is basis and does not verify the accuracy.
-            </blockquote>
           </section>
+        </div>
+
+        {/* Moved AQI chart outside the constrained div */}
+        <div className="prose max-w-3xl mx-auto text-gray-700">
+        <img 
+          src="https://github.com/user-attachments/assets/71ff920f-068d-4706-aa0f-978d143e49fe" 
+          alt="AQI Chart"
+          className="w-full rounded-lg shadow-lg mb-4"
+        />
+
+          <blockquote className="border-l-4 border-gray-300 pl-4 italic text-gray-600">
+            Data sourced from Airnow.gov, provided by the U.S. Environmental Protection Agency and the U.S. State Department’s air quality monitoring program. 
+            Data provided on as-is basis and does not verify the accuracy.
+          </blockquote>
         </div>
       </main>
       <Footer />
