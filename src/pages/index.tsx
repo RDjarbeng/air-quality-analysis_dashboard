@@ -5,8 +5,6 @@ import Papa from 'papaparse';
 import _ from 'lodash';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-// import AirQualityDashboard from '../components/AirQualityDashboard';
-// import Statistics from '../components/Statistics';
 import Navbar from '../components/Navbar';
 import { Footer } from '../components/Footer';
 import dynamic from 'next/dynamic';
