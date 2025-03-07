@@ -5,9 +5,13 @@ Data obtained from Airnow.gov which provides PM2.5 data from reference monitors 
 ## Input files: CSV files downloaded from airnow.gov located in /public
 
 
-![image](https://github.com/user-attachments/assets/4bce4115-09ad-4c7f-a835-cef547f50d36)
+![image](https://github.com/user-attachments/assets/c08a1757-82b2-4112-a6ef-adf1efcb9d68)
 
-![image](https://github.com/user-attachments/assets/534e5141-02c3-4e5e-822c-65483f7efd3e)
+![image](https://github.com/user-attachments/assets/3426c18c-464a-4022-8943-ad444975043b)
+
+
+![image](https://github.com/user-attachments/assets/5524ef44-7e98-44de-9fc8-593468a8ae59)
+
 
 ## 2024 -Data Analysis Perspective for Kigali:
 
