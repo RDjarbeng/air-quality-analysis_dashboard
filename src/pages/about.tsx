@@ -47,7 +47,6 @@ const About: React.FC = () => {
             afterImage="images/amahoro_low_visibility_20250226_075015181.jpg"
             beforeLabel="Slightly Clear Day"
             afterLabel="Low visibility Day"
-            className="w-full"
           />
           <div className="prose max-w-3xl mx-auto text-gray-700">
             <p className="text-gray-700 mb-4">
