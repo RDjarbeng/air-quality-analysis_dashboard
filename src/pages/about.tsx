@@ -18,6 +18,7 @@ const About: React.FC = () => {
               from reference monitors at the US embassy.
               For context, Kigali experienced low visibility and haze/smog in early January 2025, prompting interest in exploring the potential influence of particulate matter (PM) on these conditions.
               The data is sourced from Airnow.gov, providing valuable insights into the city's air quality patterns and trends.
+              Unfortunately, the AirNow site showing the emabassies and consulates, where I downloaded this data, shows '404 not found', with no clear timeline for when it will be back online. Fortunately, the data needed for 2022–2025 for Kigali had been downloaded beforehand.
             </p>
             <p className="mb-4">
               This analysis aims to identify notable trends in air quality data from Kigali, Rwanda, with a particular focus on the period between November 2024 and January 2025. 
