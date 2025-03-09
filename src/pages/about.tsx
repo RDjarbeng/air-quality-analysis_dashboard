@@ -8,7 +8,9 @@ const About: React.FC = () => {
     <div className="min-h-screen flex flex-col">
       <Navbar />
       <main className="container mx-auto px-4 py-8 flex-grow">
-        <h1 className="text-4xl font-bold mb-8 text-center">About the Project</h1>
+        <h1 className="text-4xl font-bold mb-8 text-center">About the Project -The Kigali Air Story</h1>
+
+
         
         <div className="prose max-w-3xl mx-auto text-gray-700">
           <section className="mb-12">
