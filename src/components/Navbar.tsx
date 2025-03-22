@@ -20,7 +20,7 @@ const Navbar = () => {
             </div>
           </div>
           <Link href="/about" className="text-gray-600 hover:text-gray-900" prefetch={true}>
-            About
+            About the project
           </Link>
         </div>
       </div>
