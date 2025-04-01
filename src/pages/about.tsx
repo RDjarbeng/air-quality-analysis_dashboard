@@ -150,9 +150,21 @@ const About: React.FC = () => {
     alt="Chart of Hourly average of PM for Kigali"
     className="w-full rounded-lg shadow-lg mb-4"
   />
-One surprising observation is that Kigali’s hourly PM2.5 averages reveal lower levels from 11 a.m. to 6 p.m. and higher concentrations at night—contrary to my initial expectations. 
-I had assumed daytime would show elevated particulate matter due to based on typical urban pollution patterns, such as transportation and industrial operations.
-
+<p>
+    One surprising observation is that Kigali’s hourly PM2.5 averages reveal lower levels from 11 a.m. to 6 p.m. and higher concentrations at night—contrary to my initial expectations. I had assumed daytime would show elevated particulate matter due to increased human activity, such as transportation and industrial operations, as is commonly expected in urban settings. 
+<p>
+    The EPA page explains that PM2.5 (fine particles 2.5 micrometers and smaller) is emitted directly from sources like "construction sites, unpaved roads, fields, smokestacks, or fires" and forms in the atmosphere from pollutants like sulfur dioxide and nitrogen oxides, which are "emitted from power plants, industries, and automobiles." These sources are tied to daytime human activities, especially transportation (vehicle exhaust) and industrial operations (smokestacks, power generation)
+    For more on how human activities contribute to PM2.5, see the{" "}
+</p>
+    <a
+      href="https://www.epa.gov/pm-pollution/particulate-matter-pm-basics"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-blue-600 hover:underline"
+    >
+      EPA’s Particulate Matter Basics
+    </a>.
+  </p>
 
             </div>
 
