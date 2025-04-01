@@ -5,15 +5,13 @@ import Papa from 'papaparse';
 import _ from 'lodash';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import Head from 'next/head'; // Import Head from next/head
 import Navbar from '../components/Navbar';
 import { Footer } from '../components/Footer';
 import dynamic from 'next/dynamic';
 
 const AirQualityDashboard = dynamic(() => import('../components/AirQualityDashboard'), { ssr: false });
 const Statistics = dynamic(() => import('../components/Statistics'), { ssr: false });
-
-
-
 
 type AirQualityData = {
   daily: any[];
@@ -55,6 +53,22 @@ export default function Home({ yearData, combinedData }: { yearData: YearData; c
 
   return (
     <div className="min-h-screen flex flex-col">
+      {/* Add Open Graph Meta Tags */}
+      <Head>
+        <title>Kigali Air Quality Dashboard</title>
+        <meta name="description" content="Explore air quality trends in Kigali, Rwanda, with PM2.5 data from 2022–2025, sourced from the US Embassy via Airnow.gov." />
+        <meta property="og:title" content="Kigali Air Quality Dashboard" />
+        <meta property="og:description" content="Analyze PM2.5 trends in Kigali from 2022–2025 using data from the US Embassy, visualizing air quality patterns and statistics." />
+        <meta property="og:url" content="https://airanalysis.netlify.app/" /> {/* Replace with your actual domain */}
+        <meta property="og:image" content="https://airanalysis.netlify.app/images/kigali_foggy_day_20250304_070427509.jpg" /> 
+        <meta property="og:type" content="website" />
+        {/* Optional Twitter Card tags */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Kigali Air Quality Dashboard" />
+        <meta name="twitter:description" content="Analyze PM2.5 trends in Kigali from 2022–2025 using data from the US Embassy." />
+        <meta name="twitter:image" content="https://github.com/user-attachments/assets/71ff920f-068d-4706-aa0f-978d143e49fe" />
+      </Head>
+
       <Navbar />
       <div className="container mx-auto p-4 flex-grow">
         <div id="dashboard">
