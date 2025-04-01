@@ -144,6 +144,16 @@ const About: React.FC = () => {
                 </ul>
                 <li>Hourly patterns show peak concentrations in early morning hours (around 3-4 AM)</li>
               </ul>
+
+              <img
+    src="images/hourly_average_day_dip.png"
+    alt="Chart of Hourly average of PM for Kigali"
+    className="w-full rounded-lg shadow-lg mb-4"
+  />
+One surprising observation is that Kigali’s hourly PM2.5 averages reveal lower levels from 11 a.m. to 6 p.m. and higher concentrations at night—contrary to my initial expectations. 
+I had assumed daytime would show elevated particulate matter due to based on typical urban pollution patterns, such as transportation and industrial operations.
+
+
             </div>
 
             <div className="mb-8">
