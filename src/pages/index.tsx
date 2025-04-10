@@ -66,6 +66,7 @@ export default function Home({ yearData, combinedData, cities }: Props) {
 
   useEffect(() => {
     console.log('Props received in component:', { yearData, combinedData, cities });
+    console.log('Cities length in useEffect:', cities?.length);
     console.log('Selected:', { selectedCity, selectedYear, showCombined });
     console.log('Current Data:', currentData);
   }, [selectedCity, selectedYear, showCombined]);
@@ -74,9 +75,13 @@ export default function Home({ yearData, combinedData, cities }: Props) {
     ? (combinedData[selectedCity] || { daily: [], monthly: [], distribution: [], hourly: [], raw: [] })
     : (yearData[selectedCity]?.[selectedYear] || { daily: [], monthly: [], distribution: [], hourly: [], raw: [] });
 
-  console.log('Cities check:', { cities, length: cities?.length }); // Debug before render
+  // More explicit logging
+  console.log('Before render - Cities:', cities);
+  console.log('Before render - Cities length:', cities?.length);
+  console.log('Before render - Condition check:', !cities || cities.length === 0);
 
   if (!cities || cities.length === 0) {
+    console.log('Rendering "No cities found" due to:', { cities, length: cities?.length });
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-100">
         <p className="text-xl text-gray-700">No cities found in the data directory</p>
@@ -84,6 +89,20 @@ export default function Home({ yearData, combinedData, cities }: Props) {
     );
   }
 
+  // Temporary simplified render to confirm props work
+  return (
+    <div className="min-h-screen flex flex-col bg-gray-100">
+      <Head>
+        <title>Air Quality Dashboard</title>
+      </Head>
+      <h1 className="text-3xl text-center mt-4">Cities Loaded: {cities.length}</h1>
+      <pre className="text-center mt-4">{JSON.stringify(cities.slice(0, 5), null, 2)}</pre>
+      <p className="text-center mt-4">Full UI coming soon...</p>
+    </div>
+  );
+
+  // Uncomment below once we confirm cities works
+  /*
   return (
     <ErrorBoundary>
       <div className="min-h-screen flex flex-col bg-gray-100">
@@ -204,6 +223,7 @@ export default function Home({ yearData, combinedData, cities }: Props) {
       </div>
     </ErrorBoundary>
   );
+  */
 }
 
 async function processData(csvText: string): Promise<AirQualityData> {
@@ -309,7 +329,6 @@ export const getStaticProps: GetStaticProps = async () => {
     return { props: { yearData: {}, combinedData: {}, cities: [] } };
   }
 
-  // Fix the replace logic to remove the trailing underscore
   const cityNames = files.map(file => {
     return file.replace(/_[0-9]{4}_YTD\.csv$/, '');
   });
@@ -371,7 +390,7 @@ export const getStaticProps: GetStaticProps = async () => {
     });
   }
 
-  console.log('Final props:', { 
+  console.log('Final props before return:', { 
     citiesLength: cities.length, 
     citiesSample: cities.slice(0, 5),
     yearDataKeys: Object.keys(yearData),
