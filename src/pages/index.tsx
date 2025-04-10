@@ -65,7 +65,7 @@ export default function Home({ yearData, combinedData, cities }: Props) {
   const router = useRouter();
 
   useEffect(() => {
-    console.log('Props received:', { yearData, combinedData, cities });
+    console.log('Props received in component:', { yearData, combinedData, cities });
     console.log('Selected:', { selectedCity, selectedYear, showCombined });
     console.log('Current Data:', currentData);
   }, [selectedCity, selectedYear, showCombined]);
@@ -73,6 +73,8 @@ export default function Home({ yearData, combinedData, cities }: Props) {
   const currentData = showCombined 
     ? (combinedData[selectedCity] || { daily: [], monthly: [], distribution: [], hourly: [], raw: [] })
     : (yearData[selectedCity]?.[selectedYear] || { daily: [], monthly: [], distribution: [], hourly: [], raw: [] });
+
+  console.log('Cities check:', { cities, length: cities?.length }); // Debug before render
 
   if (!cities || cities.length === 0) {
     return (
@@ -301,18 +303,15 @@ export const getStaticProps: GetStaticProps = async () => {
   try {
     files = fs.readdirSync(dataDir);
     console.log('Files found:', files.length, 'files');
-    console.log('Sample files:', files.slice(0, 5)); // Log first 5 files
+    console.log('Sample files:', files.slice(0, 5));
   } catch (error) {
     console.error('Error reading data directory:', error);
     return { props: { yearData: {}, combinedData: {}, cities: [] } };
   }
 
-  // Debug the transformation step-by-step
+  // Fix the replace logic to remove the trailing underscore
   const cityNames = files.map(file => {
-    const name = file
-      .replace(/[0-9]{4}_YTD\.csv/, '')
-      .replace(/_[0-9]{4}_YTD\.csv/, '');
-    return name;
+    return file.replace(/_[0-9]{4}_YTD\.csv$/, '');
   });
   console.log('Raw city names (first 5):', cityNames.slice(0, 5));
   
